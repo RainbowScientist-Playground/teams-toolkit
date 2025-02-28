@@ -120,7 +120,7 @@ import { ValidateWithTestCasesDriver } from "../component/driver/teamsApp/valida
 import { createDriverContext } from "../component/driver/util/utils";
 import "../component/feature/sso";
 import { SSO } from "../component/feature/sso";
-import { addExistingPlugin } from "../component/generator/copilotExtension/helper";
+import { addExistingPlugin } from "../component/generator/declarativeAgent/helper";
 import {
   convertSpecParserErrorToFxError,
   generateAdaptiveCardInPluginManifestForKiota,
@@ -159,9 +159,10 @@ import { NoNeedUpgradeError } from "../error/upgrade";
 import { YamlFieldMissingError } from "../error/yml";
 import { SyncManifestInputs, UninstallInputs } from "../question";
 import {
+  ActionStartOptions,
   AddAuthActionAuthTypeOptions,
-  ApiPluginStartOptions,
   AppNamePattern,
+  DeclarativeAgentApiSpecOptionId,
   HubTypes,
   KnowledgeSourceOptions,
   ProjectTypeOptions,
@@ -169,7 +170,6 @@ import {
   SPFxVersionOptionIds,
   ScratchOptions,
   TeamsAppValidationOptions,
-  apiPluginApiSpecOptionId,
 } from "../question/constants";
 import { createProjectCliHelpNode } from "../question/create";
 import { ValidateTeamsAppInputs } from "../question/inputs/ValidateTeamsAppInputs";
@@ -1660,7 +1660,7 @@ export class FxCore {
     const newOperations = inputs[QuestionNames.ApiOperation] as string[];
     const url = inputs[QuestionNames.ApiSpecLocation];
     const manifestPath = inputs[QuestionNames.ManifestPath];
-    const isPlugin = inputs[QuestionNames.ApiPluginType] === apiPluginApiSpecOptionId;
+    const isPlugin = inputs[QuestionNames.ActionType] === DeclarativeAgentApiSpecOptionId;
     const context = createContext();
 
     // Get API spec file path from manifest
@@ -1892,8 +1892,8 @@ export class FxCore {
     if (
       inputs.platform === Platform.VSCode &&
       featureFlagManager.getBooleanValue(FeatureFlags.KiotaIntegration) &&
-      inputs[QuestionNames.ApiPluginType] === ApiPluginStartOptions.apiSpec().id &&
-      !!!inputs[QuestionNames.ApiPluginManifestPath]
+      inputs[QuestionNames.ActionType] === ActionStartOptions.apiSpec().id &&
+      !!!inputs[QuestionNames.ActionManifestPath]
     ) {
       return ok({
         projectPath: inputs.projectPath,
@@ -1906,11 +1906,11 @@ export class FxCore {
     const teamsManifestPath = inputs[QuestionNames.ManifestPath];
     const appPackageFolder = path.dirname(teamsManifestPath);
     const isGenerateFromApiSpec =
-      inputs[QuestionNames.ApiPluginType] === ApiPluginStartOptions.apiSpec().id;
+      inputs[QuestionNames.ActionType] === ActionStartOptions.apiSpec().id;
     const isKiotaIntegration =
       inputs.platform === Platform.VSCode &&
       featureFlagManager.getBooleanValue(FeatureFlags.KiotaIntegration) &&
-      !!inputs[QuestionNames.ApiPluginManifestPath];
+      !!inputs[QuestionNames.ActionManifestPath];
 
     // validate the project is valid for adding plugin
     const manifestRes = await manifestUtils._readAppManifest(teamsManifestPath);
@@ -1966,8 +1966,8 @@ export class FxCore {
       if (
         inputs.platform === Platform.VSCode &&
         featureFlagManager.getBooleanValue(FeatureFlags.KiotaIntegration) &&
-        inputs[QuestionNames.ApiPluginType] === ApiPluginStartOptions.apiSpec().id &&
-        !!inputs[QuestionNames.ApiPluginManifestPath]
+        inputs[QuestionNames.ActionType] === ActionStartOptions.apiSpec().id &&
+        !!inputs[QuestionNames.ActionManifestPath]
       ) {
         inputs[QuestionNames.ApiOperation] = listResult.APIs.filter((value) => value.isValid).map(
           (value) => value.api
@@ -2030,10 +2030,10 @@ export class FxCore {
       const pluginManifestPath = path.join(
         inputs.projectPath,
         AppPackageFolderName,
-        path.basename(inputs[QuestionNames.ApiPluginManifestPath])
+        path.basename(inputs[QuestionNames.ActionManifestPath])
       );
       destinationPluginManifestPath = pluginManifestPath;
-      await fs.copyFile(inputs[QuestionNames.ApiPluginManifestPath], pluginManifestPath);
+      await fs.copyFile(inputs[QuestionNames.ActionManifestPath], pluginManifestPath);
 
       // 2.1 Need to update the plugin manifest file
       const authData: any[] = await parseAndUpdatePluginManifestForKiota(pluginManifestPath, true);
@@ -2260,7 +2260,7 @@ export class FxCore {
     }
 
     const declarativeCopilotManifest = declarativeCopilotManifesRes.value;
-    const pluginManifestFilePath = inputs[QuestionNames.ApiPluginManifestPath];
+    const pluginManifestFilePath = inputs[QuestionNames.ActionManifestPath];
 
     let actionId = "";
     declarativeCopilotManifest.actions?.forEach((action) => {
@@ -2293,7 +2293,7 @@ export class FxCore {
     }
 
     // 1. Get registration id and update plugin manifest
-    const pluginManifestPath = inputs[QuestionNames.ApiPluginManifestPath].trim() as string;
+    const pluginManifestPath = inputs[QuestionNames.ActionManifestPath].trim() as string;
     const authData = await parseAndUpdatePluginManifestForKiota(pluginManifestPath, true);
 
     // 2. Update teamsapp.local.yaml and teamsapp.yaml if need to add auth action

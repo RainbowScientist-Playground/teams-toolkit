@@ -47,7 +47,7 @@ import {
   injectAuthAction,
   listPluginExistingOperations,
 } from "../../../../src/component/generator/openApiSpec/helper";
-import { QuestionNames, apiPluginApiSpecOptionId } from "../../../../src/question";
+import { DeclarativeAgentApiSpecOptionId, QuestionNames } from "../../../../src/question";
 import { MockTools } from "../../../core/utils";
 import { teamsManifest } from "./fakeData";
 import { FeatureFlagName } from "../../../../src/common/featureFlags";
@@ -553,7 +553,7 @@ describe("formatValidationErrors", () => {
 
     const res = formatValidationErrors(errors, {
       platform: Platform.VSCode,
-      [QuestionNames.ApiPluginType]: apiPluginApiSpecOptionId,
+      [QuestionNames.ActionType]: DeclarativeAgentApiSpecOptionId,
     });
 
     const errorMessage1 = [
