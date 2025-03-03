@@ -149,12 +149,12 @@
 /packages/fx-core/src/component/feature/createAuthFiles.ts @KennethBWSong @xzf0587
 /packages/fx-core/src/component/feature/sso.ts @KennethBWSong @xzf0587
 /packages/fx-core/src/component/generator @Yukun-dong @hund030 @JerryYangKai @eriolchan
-/packages/fx-core/src/component/generator/declarativeAgent @yuqizhou77 @tecton
+/packages/fx-core/src/component/generator/declarativeAgent @yuqizhou77 @tecton @anchenyi
 /packages/fx-core/src/component/generator/copilotExtension @yuqizhou77 @huimiu @jayzhang @anchenyi
 /packages/fx-core/src/component/generator/officeAddin @jayzhang @tecton
 /packages/fx-core/src/component/generator/openApiSpec @yuqizhou77 @nliu-ms @Alive-Fish @anchenyi @jayzhang @SLdragon @KennethBWSong
 /packages/fx-core/src/component/generator/other/ssrTabGenerator.ts @Yimin-Jin @hund030 @jayzhang
-/packages/fx-core/src/component/generator/other/tdpGenerator.ts @jayzhang @tecton
+/packages/fx-core/src/component/generator/other/tdpGenerator.ts @jayzhang @tecton @anchenyi
 /packages/fx-core/src/component/generator/spfx @HuihuiWu-Microsoft @yuqizhou77 @nliu-ms
 /packages/fx-core/src/component/generator/templates @tecton @jayzhang 
 /packages/fx-core/src/component/generator/templateNames.ts @tecton @jayzhang 
