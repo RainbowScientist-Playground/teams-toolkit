@@ -1,6 +1,5 @@
 import { err, ok, SystemError, SystemErrorOptions, TeamsAppManifest } from "@microsoft/teamsfx-api";
 import { envUtil, featureFlagManager } from "@microsoft/teamsfx-core";
-import { graphAPIClient } from "@microsoft/teamsfx-core/build/client/graphAPIClient";
 import * as chai from "chai";
 import fs from "fs-extra";
 import { afterEach, describe } from "mocha";
@@ -25,6 +24,7 @@ import * as globalVariables from "../../src/globalVariables";
 import { setTools, tools } from "../../src/globalVariables";
 import { TelemetryTriggerFrom } from "../../src/telemetry/extTelemetryEvents";
 import { MockTools } from "../mocks/mockTools";
+import { GraphClient } from "@microsoft/teamsfx-core/build/client/graphClient";
 
 describe("CodeLens Provider", () => {
   afterEach(() => {
@@ -1122,7 +1122,7 @@ publish:
         },
       };
       sandbox
-        .stub(graphAPIClient, "listSensitivityLabels")
+        .stub(GraphClient.prototype, "listSensitivityLabels")
         .callsFake(mockGraphClient.listSensitivityLabels as any);
 
       const document = {
