@@ -47,7 +47,7 @@ describe("New project in existing project Tests", function () {
   });
 
   it(
-    "[auto] Create Tab typescript project and validation",
+    "[auto] New project in existing project Tests",
     {
       testPlanCaseId: 32080515,
       author: "v-ivanchen@microsoft.com",
@@ -70,17 +70,15 @@ describe("New project in existing project Tests", function () {
       );
 
       const input = await InputBox.create();
-      await input.selectQuickPick(CreateProjectQuestion.Tab);
+      await input.selectQuickPick(CreateProjectQuestion.TeamsApp);
       await driver.sleep(Timeout.input);
+      await input.selectQuickPick(CreateProjectQuestion.Tab);
       await input.selectQuickPick("Basic Tab");
       await driver.sleep(Timeout.input);
-
       // Choose programming language
-      await input.selectQuickPick("TypeScript");
-      await driver.sleep(Timeout.input);
+      await input.selectQuickPick("JavaScript");
 
       // Input folder path
-      console.log("choose project path: ", testRootFolder);
       await input.selectQuickPick("Browse...");
       await inputFolderPath(driver, input, testRootFolder);
       await driver.sleep(Timeout.input);
