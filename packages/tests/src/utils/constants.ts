@@ -462,6 +462,7 @@ export enum LocalDebugError {
   ElementNotInteractableError = "ElementNotInteractableError",
   TimeoutError = "TimeoutError",
   WarningError = "Warning",
+  WarningError2 = "npm warn",
   WarningCapError = "WARNING",
   DeprecatedError = "npm warn deprecated",
   CompiledWithWarningError = "Compiled with warnings",
@@ -537,6 +538,7 @@ export class ValidationContent {
   static readonly AiAssistantBotWelcomeInstruction =
     "I'm an assistant bot. How can I help you today?";
   static readonly AiBotErrorMessage = "The agent encountered an error or bug";
+  static readonly AiBotErrorMessage3 = "The bot encountered an error or bug";
   static readonly AiBotErrorMessage2 = "An AI request failed";
   static readonly AiBotMeetingMessage = "Team Meeting";
 }
