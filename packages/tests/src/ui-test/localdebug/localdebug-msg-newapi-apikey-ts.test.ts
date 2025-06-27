@@ -7,11 +7,7 @@
 import * as path from "path";
 import * as fs from "fs-extra";
 import { startDebugging, waitForTerminal } from "../../utils/vscodeOperation";
-import {
-  initNoAddappPage,
-  initPage,
-  validateApiMeResult,
-} from "../../utils/playwrightOperation";
+import { initPage, validateApiMeResult } from "../../utils/playwrightOperation";
 import { LocalDebugTestContext } from "./localdebugContext";
 import { Timeout, LocalDebugTaskLabel, Lang } from "../../utils/constants";
 import { Env } from "../../utils/env";
@@ -65,7 +61,7 @@ describe("Local Debug Tests", function () {
         teamsAppId,
         Env.username,
         Env.password,
-        { projectPath: projectPath, env: "local" }
+        { projectPath: projectPath, env: "local", noAddApp: true }
       );
       await validateApiMeResult(page, localDebugTestContext.appName);
     }

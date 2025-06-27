@@ -17,10 +17,7 @@ import {
   createNewProject,
 } from "../../utils/vscodeOperation";
 import { it } from "../../utils/it";
-import {
-  initNoAddappPage,
-  validateApiMeResult,
-} from "../../utils/playwrightOperation";
+import { initPage, validateApiMeResult } from "../../utils/playwrightOperation";
 import { Env } from "../../utils/env";
 
 describe("Remote debug Tests", function () {
@@ -74,11 +71,12 @@ describe("Remote debug Tests", function () {
       const teamsAppId = await remoteDebugTestContext.getTeamsAppId(
         projectPath
       );
-      const page = await initNoAddappPage(
+      const page = await initPage(
         remoteDebugTestContext.context!,
         teamsAppId,
         Env.username,
-        Env.password
+        Env.password,
+        { projectPath: projectPath, env: "dev", noAddApp: true }
       );
       await validateApiMeResult(page, remoteDebugTestContext.appName);
     }
