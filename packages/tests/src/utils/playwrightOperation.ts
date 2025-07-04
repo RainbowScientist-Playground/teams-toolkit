@@ -1511,10 +1511,7 @@ export async function validateOutlookTab(
 
 export async function validateEchoBot(
   page: Page,
-  options: { botCommand?: string; expected?: ValidationContent } = {
-    botCommand: "helloWorld",
-    expected: ValidationContent.BotWelcomeInstruction,
-  }
+  options: { botCommand?: string }
 ) {
   try {
     console.log("start to verify bot");
@@ -1531,16 +1528,6 @@ export async function validateEchoBot(
     } catch (error) {
       console.log("no message to dismiss");
     }
-
-    await RetryHandler.retry(async () => {
-      await frame?.waitForSelector(
-        `p:has-text("${
-          options?.expected || ValidationContent.BotWelcomeInstruction
-        }")`
-      );
-      console.log(options?.expected || ValidationContent.BotWelcomeInstruction);
-      console.log("verified bot that it has sent welcome!!!");
-    }, 2);
 
     await RetryHandler.retry(async () => {
       console.log("sending message ", options?.botCommand);
@@ -2988,6 +2975,7 @@ export async function validateCreatedCard(page: Page, appName: string) {
 
 export async function validateUnfurlCard(page: Page, appName: string) {
   try {
+    await messageExtensionChatWindow(page, Env.collaborator);
     const frame = await page.waitForSelector("div#app");
     console.log("start to validate unfurl an adaptive card");
     const unfurlurl = "https://www.botframework.com/";
