@@ -10,10 +10,11 @@ import {
   IGenerator,
   Inputs,
   ok,
-  Platform,
   Result,
 } from "@microsoft/teamsfx-api";
 import { merge } from "lodash";
+import * as path from "path";
+import { featureFlagManager, FeatureFlags } from "../../common/featureFlags";
 import { TelemetryEvent, TelemetryProperty } from "../../common/telemetry";
 import { MetadataV3, MetadataV4 } from "../../common/versionMetadata";
 import { ProgrammingLanguage, QuestionNames } from "../../question/constants";
@@ -26,8 +27,6 @@ import { getAllTemplatesOnPlatform, getDefaultTemplatesOnPlatform } from "./temp
 import { TemplateInfo } from "./templates/templateInfo";
 import { getTemplateReplaceMap } from "./templates/templateReplaceMap";
 import { convertToLangKey, renderTemplateFileData, renderTemplateFileName } from "./utils";
-import { featureFlagManager, FeatureFlags } from "../../common/featureFlags";
-import * as path from "path";
 
 export class DefaultTemplateGenerator implements IGenerator {
   // override this property to send telemetry event with different component name
@@ -66,7 +65,7 @@ export class DefaultTemplateGenerator implements IGenerator {
       const templatePath = templateInfo.subFolder
         ? path.join(destinationPath, templateInfo.subFolder)
         : destinationPath;
-      await this.scaffolding(context, templateInfo, templatePath, actionContext, inputs);
+      await this.scaffolding(context, inputs, templateInfo, templatePath, actionContext);
     }
 
     const postRes = await this.post(context, inputs, destinationPath, actionContext);
@@ -97,10 +96,10 @@ export class DefaultTemplateGenerator implements IGenerator {
 
   private async scaffolding(
     context: Context,
+    inputs: Inputs,
     templateInfo: TemplateInfo,
     destinationPath: string,
-    actionContext?: ActionContext,
-    inputs?: Inputs
+    actionContext?: ActionContext
   ): Promise<void> {
     const name = templateInfo.templateName;
     const language = convertToLangKey(templateInfo.language) ?? commonTemplateName;
@@ -127,7 +126,9 @@ export class DefaultTemplateGenerator implements IGenerator {
       [TelemetryProperty.TemplateName]: templateName,
     });
 
-    const templateMetadata = getAllTemplatesOnPlatform(Platform.CLI).find((t) => t.name === name);
+    const templateMetadata = getAllTemplatesOnPlatform(inputs.platform).find(
+      (t) => t.name === name
+    );
     const folderName =
       templateMetadata?.language === "common" || templateMetadata?.language === "none"
         ? templateMetadata.id
@@ -138,7 +139,7 @@ export class DefaultTemplateGenerator implements IGenerator {
       language: language,
       destination: destinationPath,
       logProvider: context.logProvider,
-      platform: inputs!.platform,
+      platform: inputs.platform,
       fileNameReplaceFn: (fileName, fileData) =>
         renderTemplateFileName(fileName, fileData, replaceMap)
           .replace(/\\/g, "/")
